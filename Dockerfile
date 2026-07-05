@@ -39,7 +39,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy just the dependency files first, for more efficient layer caching
-COPY pyproject.toml ./
+COPY my-agent/pyproject.toml my-agent/uv.lock ./
 RUN mkdir -p src
 
 # Install Python dependencies using UV's lock file
@@ -54,10 +54,8 @@ RUN uv sync --locked
 # loading your agent code.
 RUN uv run --module livekit.agents download-files
 
-# Copy all remaining application files into the container
-# This includes source code, configuration files, and dependency specifications
-# (Excludes files specified in .dockerignore)
-COPY . .
+# Copy the agent source code
+COPY my-agent/src ./src
 
 # --- Production stage ---
 # Build tools (gcc, g++, python3-dev) are not included in the final image
