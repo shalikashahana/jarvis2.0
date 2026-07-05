@@ -29,9 +29,9 @@ FROM base AS build
 # python3-dev: Python development headers needed for compilation
 # We clean up the apt cache after installation to keep the image size down
 RUN apt-get update && apt-get install -y \
-    gcc \
-    g++ \
-    python3-dev \
+  gcc \
+  g++ \
+  python3-dev \
   && rm -rf /var/lib/apt/lists/*
 
 # Create a new directory for our application code
@@ -39,7 +39,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy just the dependency files first, for more efficient layer caching
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml ./
 RUN mkdir -p src
 
 # Install Python dependencies using UV's lock file
@@ -67,12 +67,12 @@ FROM base
 # See https://docs.docker.com/build/building/best-practices/#user
 ARG UID=10001
 RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/app" \
-    --shell "/sbin/nologin" \
-    --uid "${UID}" \
-    appuser
+  --disabled-password \
+  --gecos "" \
+  --home "/app" \
+  --shell "/sbin/nologin" \
+  --uid "${UID}" \
+  appuser
 
 # Copy the application and virtual environment with correct ownership in a single layer
 # This avoids expensive recursive chown and excludes build tools from the final image
