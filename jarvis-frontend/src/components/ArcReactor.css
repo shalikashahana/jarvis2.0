@@ -1,0 +1,208 @@
+/* ═══════════════════════════════════════════════════════════════
+   Arc Reactor — Pure CSS/SVG Animation
+   Driven by CSS custom properties for zero React re-renders
+   ═══════════════════════════════════════════════════════════════ */
+
+.arc-reactor-container {
+  --reactor-glow: 0.3;
+  --reactor-scale: 1;
+  --reactor-core-brightness: 0.4;
+  --reactor-ring-speed: 0s;
+  --reactor-volume: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arc-reactor-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 calc(20px * var(--reactor-glow)) rgba(0, 212, 255, var(--reactor-glow)))
+          drop-shadow(0 0 calc(60px * var(--reactor-glow)) rgba(0, 145, 255, calc(var(--reactor-glow) * 0.5)));
+  transition: filter 0.3s ease;
+}
+
+/* ── Outer Housing Ring ── */
+.reactor-outer-ring {
+  fill: none;
+  stroke: #1C3A5E;
+  stroke-width: 3;
+  opacity: calc(0.4 + var(--reactor-glow) * 0.6);
+  transition: opacity 0.4s ease;
+}
+
+.reactor-outer-ring-accent {
+  fill: none;
+  stroke: rgba(58, 160, 255, 0.3);
+  stroke-width: 1;
+  opacity: calc(0.3 + var(--reactor-glow) * 0.7);
+}
+
+/* ── Outer Triangular Teeth ── */
+.reactor-tooth {
+  fill: #1C3A5E;
+  opacity: calc(0.5 + var(--reactor-glow) * 0.5);
+  transition: opacity 0.3s ease;
+}
+
+/* ── Middle Rotating Ring ── */
+.reactor-middle-ring-group {
+  transform-origin: 200px 200px;
+  animation: none;
+}
+
+.reactor-middle-ring-group.rotating {
+  animation: rotateRing var(--reactor-ring-speed, 8s) linear infinite;
+}
+
+.reactor-middle-line {
+  stroke: rgba(58, 160, 255, 0.4);
+  stroke-width: 1.5;
+  opacity: calc(0.4 + var(--reactor-glow) * 0.6);
+}
+
+.reactor-middle-ring-circle {
+  fill: none;
+  stroke: rgba(0, 212, 255, 0.25);
+  stroke-width: 1.5;
+  opacity: calc(0.3 + var(--reactor-glow) * 0.7);
+}
+
+/* ── Inner Core ── */
+.reactor-core-outer {
+  opacity: calc(0.2 + var(--reactor-core-brightness) * 0.8);
+  transition: opacity 0.15s ease;
+}
+
+.reactor-core-inner {
+  opacity: calc(0.3 + var(--reactor-core-brightness) * 0.7);
+  transition: opacity 0.15s ease;
+}
+
+.reactor-core-hot {
+  opacity: calc(0.1 + var(--reactor-core-brightness) * 0.9);
+  transition: opacity 0.1s ease;
+}
+
+/* ── Pulse Ring (volume-reactive) ── */
+.reactor-pulse-ring {
+  fill: none;
+  stroke: rgba(0, 212, 255, 0.4);
+  stroke-width: 2;
+  opacity: 0;
+  transform-origin: 200px 200px;
+  transform: scale(1);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.reactor-pulse-ring.active {
+  opacity: calc(var(--reactor-volume, 0) * 0.6);
+  transform: scale(calc(1 + var(--reactor-volume, 0) * 0.15));
+}
+
+/* ── Inner Decoration Circles ── */
+.reactor-inner-deco {
+  fill: none;
+  stroke: rgba(0, 212, 255, 0.15);
+  stroke-width: 0.5;
+  opacity: calc(0.3 + var(--reactor-glow) * 0.7);
+}
+
+/* ══════════════════════════════════════════
+   STATE ANIMATIONS
+   ══════════════════════════════════════════ */
+
+/* Idle: slow breathing pulse */
+.arc-reactor-container[data-state="idle"] {
+  --reactor-glow: 0.35;
+  --reactor-core-brightness: 0.45;
+  --reactor-ring-speed: 0s;
+}
+
+.arc-reactor-container[data-state="idle"] .reactor-core-outer {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* Listening: brighter, volume-reactive */
+.arc-reactor-container[data-state="listening"] {
+  --reactor-glow: 0.6;
+  --reactor-core-brightness: 0.7;
+  --reactor-ring-speed: 0s;
+}
+
+/* Thinking: fast flicker, rotating ring */
+.arc-reactor-container[data-state="thinking"] {
+  --reactor-glow: 0.7;
+  --reactor-core-brightness: 0.65;
+  --reactor-ring-speed: 3s;
+}
+
+.arc-reactor-container[data-state="thinking"] .reactor-core-hot {
+  animation: flicker 0.15s ease-in-out infinite alternate;
+}
+
+/* Speaking: bright pulse with volume, warm glow */
+.arc-reactor-container[data-state="speaking"] {
+  --reactor-glow: 0.85;
+  --reactor-core-brightness: 0.8;
+  --reactor-ring-speed: 12s;
+}
+
+/* Disconnected: dim outline */
+.arc-reactor-container[data-state="disconnected"] {
+  --reactor-glow: 0.08;
+  --reactor-core-brightness: 0.1;
+  --reactor-ring-speed: 0s;
+}
+
+.arc-reactor-container[data-state="disconnected"] .arc-reactor-svg {
+  opacity: 0.15;
+  filter: none;
+}
+
+/* ── Keyframes ── */
+@keyframes breathe {
+  0%, 100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0.9;
+  }
+}
+
+@keyframes rotateRing {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Ambient Background Glow ── */
+.reactor-ambient-glow {
+  position: absolute;
+  width: 140%;
+  height: 140%;
+  top: -20%;
+  left: -20%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(0, 212, 255, calc(var(--reactor-glow) * 0.12)) 0%,
+    rgba(0, 145, 255, calc(var(--reactor-glow) * 0.06)) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: -1;
+}

@@ -1,0 +1,208 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════════
+   JARVIS Arc Reactor — Global Styles & Design Tokens
+   ═══════════════════════════════════════════════════════════════ */
+
+@theme {
+  --color-jarvis-bg-start: #03060D;
+  --color-jarvis-bg-end: #070C18;
+  --color-jarvis-core: #00D4FF;
+  --color-jarvis-core-hot: #EAFBFF;
+  --color-jarvis-ring: #1C3A5E;
+  --color-jarvis-accent: #3AA0FF;
+  --color-jarvis-glass-bg: rgba(10, 20, 40, 0.6);
+  --color-jarvis-glass-border: rgba(58, 160, 255, 0.25);
+  --color-jarvis-text-primary: #E6F4FF;
+  --color-jarvis-text-secondary: #7FA8CC;
+  --color-jarvis-cta-start: #0091FF;
+  --color-jarvis-cta-end: #00D4FF;
+  --color-jarvis-danger: #FF4757;
+  --color-jarvis-warning: #FFA502;
+  --color-jarvis-surface: rgba(10, 25, 50, 0.45);
+
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+/* ── Base Reset & Background ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  color: var(--color-jarvis-text-primary);
+  background: radial-gradient(ellipse at 50% 20%, var(--color-jarvis-bg-end) 0%, var(--color-jarvis-bg-start) 70%);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ── Scrollbar Styling ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(58, 160, 255, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(58, 160, 255, 0.5);
+}
+
+/* ── Glassmorphism Utility ── */
+.glass-panel {
+  background: var(--color-jarvis-glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--color-jarvis-glass-border);
+  border-radius: 16px;
+}
+
+.glass-panel-subtle {
+  background: var(--color-jarvis-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(58, 160, 255, 0.12);
+  border-radius: 12px;
+}
+
+/* ── CTA Button Gradient ── */
+.btn-cta {
+  background: linear-gradient(135deg, var(--color-jarvis-cta-start), var(--color-jarvis-cta-end));
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn-cta:hover::before {
+  opacity: 1;
+}
+
+.btn-cta:hover {
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.4), 0 0 60px rgba(0, 145, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.btn-cta:active {
+  transform: translateY(0);
+}
+
+.btn-cta:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Danger Button ── */
+.btn-danger {
+  background: linear-gradient(135deg, #FF4757, #FF6B81);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-danger:hover {
+  box-shadow: 0 0 25px rgba(255, 71, 87, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ── Ghost Button ── */
+.btn-ghost {
+  background: rgba(58, 160, 255, 0.1);
+  color: var(--color-jarvis-text-primary);
+  border: 1px solid rgba(58, 160, 255, 0.25);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-ghost:hover {
+  background: rgba(58, 160, 255, 0.2);
+  border-color: rgba(58, 160, 255, 0.4);
+}
+
+/* ── Fade-in Animation ── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease forwards;
+}
+
+/* ── Subtle Glow Text ── */
+.text-glow {
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.5), 0 0 30px rgba(0, 212, 255, 0.2);
+}
+
+/* ── Connection Status Dot ── */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.status-dot.connected {
+  background: #00FF88;
+  box-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+}
+
+.status-dot.disconnected {
+  background: #555;
+}
+
+.status-dot.connecting {
+  background: var(--color-jarvis-warning);
+  box-shadow: 0 0 8px rgba(255, 165, 2, 0.6);
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
